@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -57,10 +57,46 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    function removeTransition(e) {
+      if(e.propertyName != 'transform') return;
+      this.classList.remove('playing');
+    }
 
-</script>
+    function playSound(e) {
+      console.log(audio = document.querySelector(`audio[data-key="${e.keyCode}"]`));
+      console.log(key = document.querySelector(`.key[data-key="${e.keyCode}"]`))
+      if(!audio) return; // Terminate script if no audio return
+      if(!key) return; // Terminate script if no key return
+
+      audio.currentTime = 0;
+      audio.play();
+      key.classList.add('playing'); 
+    }
+
+    function keyClickEventHandler(event) {
+      console.log(this);
+      console.log(audio = document.querySelector(`audio[data-key="${this.dataset['key']}"]`));
+      if(!audio) return; // Terminate script if no audio return
+
+      audio.currentTime = 0;
+      audio.play();
+      this.classList.add('playing'); 
+    }
+
+    function forEachKey(key) {
+      key.addEventListener('click', keyClickEventHandler);
+      key.addEventListener('transitionend', removeTransition);
+    }
+
+    document.querySelectorAll('.key').forEach(forEachKey);
+
+    window.addEventListener('keydown', playSound);
+
+
+  </script>
 
 
 </body>
+
 </html>
